@@ -1,0 +1,44 @@
+variables:
+    {chat} = true
+
+options:
+	Prefix: &c&lClear&a&lChat &f>
+
+command /clearchat <player>:	
+	permission: clearchat.use.player
+	description: Clears a players chat.
+	aliases: /cc
+	trigger:
+		loop 300 times:
+			message "   " to arg-1
+		message "{@Prefix} &a%arg 1%'s chat has been cleared&7!"
+		stop trigger
+
+command /clearchatall:
+	permission: clearchat.use.everyone
+	description: Clears everyone's chat.
+	aliases: /cca, /ccall
+	trigger:
+		loop 300 times:
+			broadcast "   "
+		wait 1 tick
+		message "{@Prefix} &aEveryone's chat has been cleared&7!"
+		stop trigger
+	
+command /mutechat:
+	permission: clearchat.mutechat
+	description: Mutes everyone.
+	aliases: /mc, /mutec, /chatmute, /mchat
+	trigger:
+		if {chat} is true:
+			set {chat} to false
+			broadcast "{@Prefix} &fAll players muted!"
+		else:
+			set {chat} to true
+			broadcast "{@Prefix} &fAll players unmuted!"
+			stop trigger
+
+on chat:
+	if {chat} = false:
+		if player doesn't have permission "clearchat.mutechat.bypass":
+			cancel event
